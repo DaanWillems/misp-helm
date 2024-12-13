@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-misp-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-misp-core
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-misp-core
+    spec:
+      containers:
+      - name: example-container
+        image: "{{ .Values.core.image.registry }}/{{.Values.core.image.repository}}:{{.Values.core.image.tag}}"
+        ports:
+        - containerPort: 443
+        env:
+        - name: ADMIN_EMAIL
+          value: "" # Email/username for user #1, defaults to MISP's default (admin@admin.test)
+        - name: ADMIN_ORG
+          value: "" # name of org #1, default to MISP's default (ORGNAME)
+        - name: ADMIN_KEY
+          value: "" # defaults to an automatically generated one
+        - name: ADMIN_PASSWORD
+          value: "" # defaults to MISP's default (admin)
+        - name: GPG_PASSPHRASE
+          value: "" # defaults to 'passphrase'
+        - name: CRON_USER_ID
+          value: "1" # defaults to 1 (the admin user)
+        - name: BASE_URL
+          value: "https://localhost" # defaults to 'https://localhost'
+        - name: ENABLE_DB_SETTINGS
+          value: "false" # store settings in db except those that must stay in config.php. true/false, defaults to false
+        - name: ENCRYPTION_KEY
+          value: "" # encryption key. defaults to empty string
+        - name: ENABLE_BACKGROUND_UPDATES
+          value: "false" # enable background updates. defaults to false
+        
